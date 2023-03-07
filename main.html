@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="sv" dir="ltr">
+    <head>
+        <title>GUI Handler</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <script src="https://kit.fontawesome.com/784f430f58.js" crossorigin="anonymous"></script>
+
+        <!-- For Client View -->
+        <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.10.1/css/bootstrap.css" />
+        <link type="text/css" rel="stylesheet" href="https://source.zoom.us/2.10.1/css/react-select.css" />
+
+        <link rel="stylesheet" href="styles.css">
+        <meta http-equiv="origin-trial" content="">
+
+        <script src="https://source.zoom.us/zoom-meeting-1.9.7.min.js"></script>
+    </head>
+<body>
+
+  <div>
+    <header>
+      <div>
+        <h1><block>
+            System status: På
+        </block></h1>
+
+        <div class="timer">
+          <span id="date"></span>
+          <span>&nbsp;</span>
+          <span id="hours">00</span>
+          <span>:</span>
+          <span id="minutes">00</span>
+          <span>:</span>
+          <span id="seconds">00</span>
+          <span id="day"></span>
+          <span>, </span>
+          <span id="session">EM</span>
+        </div>
+
+        <div class="container">
+          <h1>Fall detekterat!</h1>
+          <h2>Meddela vårdare nu</h2>
+
+          <div class="btn">
+
+            <button id="join_button">Join Zoom Meeting</button>
+            <br>
+
+            <button onClick="getSignature()">Nödsamtal</button>
+            <!--<a href="https://ltu-se.zoom.us/my/trading123" target="_self">
+                <button>Nödsamtal</button> 
+            </a>-->
+
+            <br>
+            <button onclick="showAlert()">Falskt larm</button> 
+            
+            <br>
+            <button onclick="startZoomMeeting()">Meddela vårdare</button>
+            
+            <main>
+              <!-- For Component View -->
+              <div id="meetingSDKElement">
+                <!-- Zoom Meeting SDK Rendered Here -->
+              </div>
+
+              <!--<button onClick="getSignature()">Join Meeting</button>-->
+            </main>
+
+            <!-- For Component and Client View -->
+            <script src="https://source.zoom.us/2.10.1/lib/vendor/react.min.js"></script>
+            <script src="https://source.zoom.us/2.10.1/lib/vendor/react-dom.min.js"></script>
+            <script src="https://source.zoom.us/2.10.1/lib/vendor/redux.min.js"></script>
+            <script src="https://source.zoom.us/2.10.1/lib/vendor/redux-thunk.min.js"></script>
+            <script src="https://source.zoom.us/2.10.1/lib/vendor/lodash.min.js"></script>
+
+            <!-- For Client View -->
+            <script src="https://source.zoom.us/zoom-meeting-2.10.1.min.js"></script>
+            <script type="text/javascript" src="client-view.js"></script>
+            
+          </div>
+        </div>
+
+        <div class="logout">
+                 <a href="start.html">Logga ut</a>
+        </div>
+
+      </div>
+    </header>
+
+    <script>
+     document.getElementById('join_button').addEventListener('click', () => {
+      // Create ZoomMtg object
+      ZoomMtg.setZoomJSLib('https://source.zoom.us/1.9.7/lib', '/av');
+
+      // Initialize the ZoomMtg object
+      ZoomMtg.preLoadWasm();
+      ZoomMtg.prepareJssdk();
+
+      // Join the Zoom meeting
+      ZoomMtg.join({
+        meetingNumber: '4510967826',
+        userName: 'Patient 0',
+        signature: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6IjBJenRhUzgtVC1LQnFNWUFQRnZENlEiLCJleHAiOjE2NzgxOTIzNTAsImlhdCI6MTY3ODE4Njk1NH0.spH_6vDfpSSlsZiDF4B-kawbetA5FnIQqLhWxWUgg24',
+        apiKey: '0IztaS8-T-KBqMYAPFvD6Q',
+        passWord: '',
+        success: function(res) {
+          console.log('Join meeting success');
+        },
+        error: function(res) {
+          console.log(res);
+        }
+    });
+});
+      //Tid och datum funktion
+      function displayTime(){
+      var dateTime = new Date();
+      var hrs = dateTime.getHours();
+      var min = dateTime.getMinutes();
+      var sec = dateTime.getSeconds();
+      var session = document.getElementById('session');
+
+      var date = document.getElementById('date');
+      date.innerHTML = dateTime.toLocaleDateString();
+
+      var daysOfWeek = ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"];
+      var dayOfWeek = daysOfWeek[dateTime.getDay()];
+      var day = document.getElementById('day');
+      day.innerHTML = dayOfWeek;
+
+      if(hrs >=12){
+        session.innerHTML = 'FM';
+      }else{
+        session.innerHTML = 'EM'
+      }
+      document.getElementById('hours').innerHTML = hrs;
+      document.getElementById('minutes').innerHTML = min;
+      document.getElementById('seconds').innerHTML = sec;
+    }
+      setInterval(displayTime, 1000);
+
+    //Falskt larm meddelande 
+    function showAlert() {
+      var myText = "Falskt larm har meddelat till vårdaren";
+      alert (myText);
+    }
+    
+    //Zoom test
+    function startZoomMeeting() {
+      var meetingId = "4510967826";
+      //var password = "";
+      //var joinUrl = "https://ltu-se.zoom.us/my/trading123" + meetingId + "&pwd=" + password;
+      //var joinUrl = "zoommtg://zoom.us/join?action=join&confno=" + meetingId + "&pwd=" + password;
+      var joinUrl = "zoommtg://zoom.us/join?action=join&confno=" + meetingId;
+      window.open(joinUrl, '_blank');
+    }
+  </script>
+
+  <style>
+  body {
+    margin: 0%;
+    /*background-color: black;*/
+    padding: 3px;
+    background-color: rgb(88, 1, 122);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  block {
+    font-size: 28px;
+    color: white;
+    width: 60px;
+    border: 2px solid;
+    background-color: rgb(110, 181, 4);
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .timer{
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  .container{
+    /*background-color: rgb(88, 1, 122);*/
+    background-color: black;
+    text-align: center;
+    margin-top: 2px;
+  }
+  .container h1{
+    padding-top: 22px;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+  }
+  .container h2{
+    font-size: 16px;
+    color: white;
+  }
+
+  .btn{
+    display: inline-block;
+  }
+  .btn button{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 16px;
+    color: #FFFF00 ;
+    background-color: #0000FF;
+    font-size: 32px;
+    text-transform: uppercase;
+  }
+  .logout a {
+    font-size: 23px;
+    color: white;
+  }
+</style>
+     
+</div>
+</body>
+</html>
